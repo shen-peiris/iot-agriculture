@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro AI | Premium Control</title>
+    <!-- Fonts are imported in CSS now -->
+    <link rel="stylesheet" href="style.css?v=20">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js?v=20" defer></script>
+</head>
+
+<body>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay">
+        <div class="login-card glass-panel">
+            <div class="flex-center" style="margin-bottom: 2rem;">
+                <div class="brand-logo" style="width:48px; height:48px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                    </svg>
+                </div>
+            </div>
+            <h2 style="margin-bottom: 0.5rem;">System Access</h2>
+            <p style="color:var(--text-muted); margin-bottom: 2rem;">Authenticating Secure Connection</p>
+
+            <form id="login-form">
+                <input type="text" id="username" class="input-field" placeholder="Operator ID" autocomplete="off">
+                <input type="password" id="password" class="input-field" placeholder="Security Key">
+                <div id="login-error" style="color:var(--danger); height:24px; font-size: 0.85rem;"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Initialize Session</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- App Shell -->
+    <div class="app-shell hidden" id="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                </div>
+                <span class="brand-text">Agro AI</span>
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-item active" onclick="switchTab('dashboard')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </li>
+                <li class="nav-item" onclick="switchTab('analytics')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 20V10M12 20V4M6 20v-6" />
+                    </svg>
+                    Analytics
+                </li>
+                <li class="nav-item" onclick="switchTab('settings')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                        </path>
+                    </svg>
+                    Settings
+                </li>
+            </ul>
+
+            <div style="flex:1"></div>
+
+            <!-- Sensor Status Sidebar Widget -->
+            <div
+                style="background:rgba(255,255,255,0.05); border-radius:12px; padding:1rem; margin-bottom:1rem; border:1px solid rgba(255,255,255,0.1);">
+                <div
+                    style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.5rem; letter-spacing:1px; text-transform:uppercase;">
+                    System Health</div>
+
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                    <div id="status-indicator"
+                        style="width:8px; height:8px; border-radius:50%; background:var(--danger); box-shadow: 0 0 10px var(--danger);">
+                    </div>
+                    <span id="status-text" style="font-size:0.9rem; font-weight:600;">Offline</span>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted);">
+                    <span>Sync:</span>
+                    <span id="last-sync">--</span>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="logout()" style="justify-content:center; color: var(--danger);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                <span>Disconnect</span>
+            </div>
+        </aside>
+
+        <!-- Main View -->
+        <main class="main-view">
+
+            <!-- Dashboard Tab -->
+            <div id="view-dashboard">
+                <header>
+                    <div>
+                        <h1 id="greeting">Agro AI</h1>
+                        <p class="subtitle">System Status: <span style="color:var(--accent-emerald);">Nominal</span></p>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="subtitle" id="system-time">--:--</div>
+                        <div id="ai-status-indicator"
+                            style="display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--accent-purple); background:rgba(139, 92, 246, 0.1); padding:4px 12px; border-radius:20px; border:1px solid rgba(139, 92, 246, 0.2); margin-right: 8px; display:inline-flex;">
+                            <div class="pulse-purple"></div>
+                            <span style="font-weight:600; letter-spacing:0.5px;">AI ACTIVE</span>
+                        </div>
+                        <div id="header-status"
+                            style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:var(--accent-emerald); background:rgba(16,185,129,0.1); padding:4px 12px; border-radius:20px; border:1px solid rgba(16,185,129,0.2); display:inline-flex;">
+                            <div class="pulse-status"></div>
+                            <span style="font-weight:600; letter-spacing:0.5px;">ESP32 CONNECTED</span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="grid-dashboard">
+
+                    <!-- Temp -->
+                    <div class="glass-panel metric-card card-temp col-span-1">
+                        <div class="metric-header">
+                            <span>Temperature</span>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+                            </svg>
+                        </div>
+                        <div class="metric-value"><span id="temp-display">--</span>°</div>
+                        <div class="metric-sub">Ambient Sensor Array A</div>
+                    </div>
+
+                    <!-- Humidity -->
+                    <div class="glass-panel metric-card card-hum col-span-1">
+                        <div class="metric-header">
+                            <span>Humidity</span>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                            </svg>
+                        </div>
+                        <div class="metric-value"><span id="hum-display">--</span>%</div>
+                        <div class="metric-sub">Relative Moisture Content</div>
+                    </div>
+
+                    <!-- Pressure -->
+                    <div class="glass-panel metric-card card-pres col-span-1">
+                        <div class="metric-header">
+                            <span>Pressure</span>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M12 2a9 9 0 0 1 9 9v11H3V11a9 9 0 0 1 9-9z" />
+                                <path d="M12 11a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" />
+                            </svg>
+                        </div>
+                        <div class="metric-value"><span id="pres-display">--</span><span
+                                style="font-size:1rem;color:var(--text-muted)">hPa</span></div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div class="metric-sub">Barometric Sensor</div>
+                            <div id="ai-prediction-badge" class="badge-neutral"
+                                style="font-size:0.7rem; padding:2px 8px; border-radius:10px;">Stable</div>
+                        </div>
+                    </div>
+
+                    <!-- Rain -->
+                    <div class="glass-panel metric-card col-span-1" id="card-rain">
+                        <div class="metric-header">Precipitation</div>
+                        <div class="metric-value" id="rain-display" style="font-size:2rem;">--</div>
+                        <div class="metric-sub">External Sensors</div>
+                    </div>
+
+                    <!-- Light Level & Night Mode -->
+                    <div class="glass-panel metric-card col-span-1" id="card-ldr">
+                        <div class="metric-header">
+                            <span>Ambient Light</span>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <path
+                                    d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="metric-value" style="font-size:2rem;"><span id="ldr-display">--</span></div>
+                        <div class="metric-sub" id="ldr-status">Waiting...</div>
+                    </div>
+
+                    <!-- Night Lights Control Panel -->
+                    <div class="glass-panel col-span-3"
+                        style="display: flex; align-items: center; justify-content: space-between; gap: 2rem;">
+                        <div style="flex: 1;">
+                            <div class="metric-header" style="margin-bottom: 0.5rem;">Night Illumination System
+                            </div>
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <div id="led-indicator-1" class="led-dot" title="LED 1"></div>
+                                <div id="led-indicator-2" class="led-dot" title="LED 2"></div>
+                                <div id="led-indicator-3" class="led-dot" title="LED 3"></div>
+                                <div id="led-indicator-4" class="led-dot" title="LED 4"></div>
+                                <span class="metric-sub" style="margin-left: 0.5rem;">Active Emitters</span>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span class="metric-sub">Control Mode:</span>
+                            <div class="btn-group">
+                                <button id="btn-night-auto" class="btn btn-sm btn-active"
+                                    onclick="setNightMode('AUTO')">AUTO</button>
+                                <button id="btn-night-on" class="btn btn-sm" onclick="setNightMode('ON')">ON</button>
+                                <button id="btn-night-off" class="btn btn-sm" onclick="setNightMode('OFF')">OFF</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tank (Resized to col-span-1, Vertical Layout) -->
+                    <div class="glass-panel col-span-1"
+                        style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                        <div class="metric-header" style="width: 100%; text-align: left; margin-bottom: 0.5rem;">
+                            Water
+                            Reserves</div>
+
+                        <div class="tank-container" style="width: 60px; height: 100px; margin-bottom: 0.5rem;">
+                            <div class="tank-liquid" id="tank-level-visual" style="height:50%"></div>
+                        </div>
+
+                        <div class="metric-value" style="font-size: 2rem;"><span id="tank-val">--</span>%</div>
+                        <div class="metric-sub"
+                            style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.8rem;">
+                            Distance: <span id="tank-dist"
+                                style="color: var(--accent-cyan); font-weight: bold;">--</span> cm
+                        </div>
+
+                        <div style="width:100%; display:flex; gap:0.5rem; justify-content:center;">
+                            <div class="btn-group" style="width:100%">
+                                <button id="btn-tank-auto" class="btn btn-sm"
+                                    onclick="setPumpMode('tank', 'AUTO')">A</button>
+                                <button id="btn-tank-on" class="btn btn-sm"
+                                    onclick="setPumpMode('tank', 'ON')">On</button>
+                                <button id="btn-tank-off" class="btn btn-sm"
+                                    onclick="setPumpMode('tank', 'OFF')">Off</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Soil Grid -->
+                    <!-- Soil Grid -->
+                    <div class="col-span-3 grid-dashboard" style="grid-template-columns: repeat(4, 1fr); gap:1.5rem;">
+                        <!-- Div 1 -->
+                        <div class="glass-panel metric-card card-soil" id="card-div1">
+                            <div class="metric-header">Zone Alpha</div>
+                            <div class="metric-value"><span id="soil1-val">--</span>%</div>
+                            <div class="progress-track" style="margin-bottom:1rem;">
+                                <div class="progress-fill" id="soil1-bar"
+                                    style="width:0%; background:var(--accent-emerald);"></div>
+                            </div>
+                            <div class="btn-group" style="width:100%">
+                                <button id="btn-div1-auto" class="btn btn-sm"
+                                    onclick="setPumpMode('div1', 'AUTO')">Auto</button>
+                                <button id="btn-div1-on" class="btn btn-sm"
+                                    onclick="setPumpMode('div1', 'ON')">On</button>
+                                <button id="btn-div1-off" class="btn btn-sm"
+                                    onclick="setPumpMode('div1', 'OFF')">Off</button>
+                            </div>
+                        </div>
+
+                        <!-- Div 2 -->
+                        <div class="glass-panel metric-card card-soil" id="card-div2">
+                            <div class="metric-header">Zone Beta</div>
+                            <div class="metric-value"><span id="soil2-val">--</span>%</div>
+                            <div class="progress-track" style="margin-bottom:1rem;">
+                                <div class="progress-fill" id="soil2-bar"
+                                    style="width:0%; background:var(--accent-cyan);"></div>
+                            </div>
+                            <div class="btn-group" style="width:100%">
+                                <button id="btn-div2-auto" class="btn btn-sm"
+                                    onclick="setPumpMode('div2', 'AUTO')">Auto</button>
+                                <button id="btn-div2-on" class="btn btn-sm"
+                                    onclick="setPumpMode('div2', 'ON')">On</button>
+                                <button id="btn-div2-off" class="btn btn-sm"
+                                    onclick="setPumpMode('div2', 'OFF')">Off</button>
+                            </div>
+                        </div>
+
+                        <!-- Div 3 (Converted to Paddy Field) -->
+                        <div class="glass-panel metric-card card-soil" id="card-div3">
+                            <div class="metric-header">Paddy Field</div>
+                            <div class="metric-value"><span id="paddy-val">--</span>%</div>
+                            <div class="metric-sub">Water Level (A0)</div>
+                            <div class="progress-track" style="margin-bottom:1rem;">
+                                <div class="progress-fill" id="paddy-bar"
+                                    style="width:0%; background:var(--accent-cyan);"></div>
+                            </div>
+                            <div class="btn-group" style="width:100%">
+                                <button id="btn-div3-auto" class="btn btn-sm"
+                                    onclick="setPumpMode('div3', 'AUTO')">Auto</button>
+                                <button id="btn-div3-on" class="btn btn-sm"
+                                    onclick="setPumpMode('div3', 'ON')">On</button>
+                                <button id="btn-div3-off" class="btn btn-sm"
+                                    onclick="setPumpMode('div3', 'OFF')">Off</button>
+                            </div>
+                        </div>
+
+                        <!-- Average Soil Status Card -->
+                        <div class="glass-panel metric-card card-soil" id="card-avg-soil">
+                            <div class="metric-header">Avg Soil Status</div>
+                            <div class="metric-value"><span id="avg-soil-val">--</span>%</div>
+                            <div class="metric-sub">Zones Alpha & Beta</div>
+                            <div class="progress-track" style="margin-bottom:1rem;">
+                                <div class="progress-fill" id="avg-soil-bar"
+                                    style="width:0%; background:var(--accent-purple);"></div>
+                            </div>
+                            <div style="font-size:0.8rem; color:var(--text-muted); text-align:center;">
+                                Combined Sensor Data
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Grid (Single Sensor) -->
+                    <div class="col-span-4" id="card-security"
+                        style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+
+                        <!-- Front Gate -->
+                        <div class="glass-panel security-card" id="card-sec-front" style="text-align:center;">
+                            <div class="security-header" style="justify-content:center;">
+                                <span
+                                    style="font-weight:700; font-size:1.5rem; letter-spacing:1px; color:var(--text-main);">PERIMETER
+                                    SECURITY</span>
+                                <div class="status-visual secure" id="vis-front" style="width:64px; height:64px;">
+                                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div
+                                style="display:flex; justify-content:center; align-items:center; flex-direction:column; color:var(--text-muted); font-size:1rem; margin-bottom:1rem; margin-top:1rem;">
+                                <span style="margin-bottom:0.5rem; letter-spacing:1px; font-weight:600;">STATUS</span>
+                                <span id="pir1-status"
+                                    style="font-family:var(--font-mono); font-size:1.5rem; font-weight:bold;">MONITORING</span>
+                            </div>
+
+                            <button id="btn-buzzer-front" class="btn btn-alarm" style="max-width:300px; margin:0 auto;"
+                                onclick="toggleBuzzer('front')">
+                                ACTIVATE LOCKDOWN
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- System Logs -->
+                    <div class="glass-panel col-span-4"
+                        style="min-height:300px; max-height:400px; display:flex; flex-direction:column;">
+                        <div class="metric-header"
+                            style="margin-bottom:1rem; color:var(--text-main); justify-content:space-between;">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M4 17l6-6-6-6M12 19h8" />
+                                </svg>
+                                System Event Log
+                            </div>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">Real-time Stream</span>
+                        </div>
+                        <div id="ai-feed"
+                            style="overflow-y:auto; flex:1; padding-right:0.5rem; display:flex; flex-direction:column; gap:0.5rem;">
+                            <!-- Stream -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- End Dashboard Tab -->
+
+            <!-- Analytics Tab -->
+            <div id="view-analytics" class="hidden">
+                <header>
+                    <div>
+
+                        <h1>Analytics Engine</h1>
+                        <p class="subtitle">Historical Data Visualization</p>
+                    </div>
+                </header>
+                <div class="grid-dashboard">
+                    <div class="glass-panel col-span-2" style="height:400px; padding:2rem;">
+                        <canvas id="chart-env"></canvas>
+                    </div>
+                    <div class="glass-panel col-span-2" style="height:400px; padding:2rem;">
+                        <canvas id="chart-soil"></canvas>
+                    </div>
+                    <div class="glass-panel col-span-2" style="height:400px; padding:2rem;">
+                        <canvas id="chart-radar"></canvas>
+                    </div>
+                    <div class="glass-panel col-span-2" style="height:400px; padding:2rem;">
+                        <canvas id="chart-doughnut"></canvas>
+                    </div>
+                </div>
+
+                <!-- Comprehensive Stats Widget -->
+                <div class="glass-panel" style="margin-top: 2rem; padding: 2rem;">
+                    <h2 class="section-title">Telemetry & Statistics</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; margin-top: 1rem;">
+
+                        <!-- Left: Session Stats -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <!-- Card 1 -->
+                            <div class="stat-card-mini">
+                                <span class="label">Uptime</span>
+                                <span class="value" id="stat-uptime">00:00</span>
+                            </div>
+                            <!-- Card 2 -->
+                            <div class="stat-card-mini">
+                                <span class="label">Packets Rx</span>
+                                <span class="value" id="stat-packets">0</span>
+                            </div>
+                            <!-- Card 3 -->
+                            <div class="stat-card-mini">
+                                <span class="label">Max Temp</span>
+                                <span class="value" id="stat-max-temp">--°C</span>
+                            </div>
+                            <!-- Card 4 -->
+                            <div class="stat-card-mini">
+                                <span class="label">Min Temp</span>
+                                <span class="value" id="stat-min-temp">--°C</span>
+                            </div>
+                            <!-- Card 5 -->
+                            <div class="stat-card-mini span-2" style="grid-column: span 2;">
+                                <span class="label">Avg Soil Moisture</span>
+                                <span class="value" id="stat-avg-soil">--%</span>
+                            </div>
+                        </div>
+
+                        <!-- Right: Live Log Table -->
+                        <div class="log-table-container custom-scrollbar">
+                            <table class="log-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Temp</th>
+                                        <th>Soil (Avg)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stats-log-body">
+                                    <!-- Rows injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="view-settings" class="hidden">
+                <header>
+                    <div>
+                        <h1>System Configuration</h1>
+                        <p class="subtitle">Thresholds & Preferences</p>
+                    </div>
+                </header>
+
+                <div class="glass-panel" style="max-width:600px; margin:0 auto;">
+                    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                        <div>
+                            <label
+                                style="display:block; margin-bottom:0.5rem; color:var(--text-muted); font-size:0.9rem;">Operator
+                                Name</label>
+                            <input type="text" id="setting-username" class="input-field" value="Admin">
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                            <div>
+                                <label
+                                    style="display:block; margin-bottom:0.5rem; color:var(--text-muted); font-size:0.9rem;">Dry
+                                    Threshold (%)</label>
+                                <input type="number" id="setting-dry" class="input-field" value="30">
+                            </div>
+                            <div>
+                                <label
+                                    style="display:block; margin-bottom:0.5rem; color:var(--text-muted); font-size:0.9rem;">Wet
+                                    Threshold (%)</label>
+                                <input type="number" id="setting-wet" class="input-field" value="70">
+                            </div>
+                        </div>
+
+
+
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; padding:1rem; background:rgba(255,255,255,0.02); border-radius:var(--radius-sm);">
+                            <div style="display:flex; flex-direction:column;">
+                                <span style="font-weight:600;">System Notifications</span>
+                                <span style="font-size:0.8rem; color:var(--text-muted);">Enable alerts for
+                                    thresholds</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="setting-notif" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; padding:1rem; background:rgba(255,255,255,0.02); border-radius:var(--radius-sm);">
+                            <div style="display:flex; flex-direction:column;">
+                                <span style="font-weight:600;" id="simulation-label">Simulation Mode</span>
+                                <span style="font-size:0.8rem; color:var(--text-muted);">Simulate hardware sensor data for testing</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="simulation-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; padding:1rem; background:rgba(255,255,255,0.02); border-radius:var(--radius-sm);">
+                            <div style="display:flex; flex-direction:column;">
+                                <span style="font-weight:600;">PIR Sensor Section</span>
+                                <span style="font-size:0.8rem; color:var(--text-muted);">Show/hide perimeter security panel on dashboard</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="setting-pir" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <div style="margin-top:1rem;">
+                            <button class="btn btn-primary" style="width:100%;" onclick="saveSettings()">Save
+                                Configuration</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        <!-- End Main View -->
+
+    </div> <!-- End App Shell -->
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"
+        style="position:fixed; top:6rem; right:2rem; padding:1rem; display:flex; flex-direction:column; gap:0.5rem; z-index:9999; pointer-events:none;">
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+PYTHON DETECTED IPS:
+  10.75.45.92
+
+FULL IPCONFIG:
+
+Windows IP Configuration
+
+   Host Name . . . . . . . . . . . . : Shen_Peiris
+   Primary Dns Suffix  . . . . . . . : 
+   Node Type . . . . . . . . . . . . : Hybrid
+   IP Routing Enabled. . . . . . . . : No
+   WINS Proxy Enabled. . . . . . . . : No
+
+Unknown adapter Avast SecureLine VPN Wintun:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+   Description . . . . . . . . . . . : Avast SecureLine Wintun Adapter
+   Physical Address. . . . . . . . . : 
+   DHCP Enabled. . . . . . . . . . . : No
+   Autoconfiguration Enabled . . . . : Yes
+
+Wireless LAN adapter Local Area Connection* 1:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+   Description . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter
+   Physical Address. . . . . . . . . : 30-89-4A-D4-BE-E5
+   DHCP Enabled. . . . . . . . . . . : Yes
+   Autoconfiguration Enabled . . . . : Yes
+
+Wireless LAN adapter Local Area Connection* 10:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+   Description . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter #2
+   Physical Address. . . . . . . . . : 32-89-4A-D4-BE-E4
+   DHCP Enabled. . . . . . . . . . . : Yes
+   Autoconfiguration Enabled . . . . : Yes
+
+Wireless LAN adapter Wi-Fi:
+
+   Connection-specific DNS Suffix  . : 
+   Description . . . . . . . . . . . : Intel(R) Wi-Fi 6 AX201 160MHz
+   Physical Address. . . . . . . . . : 96-A2-60-DA-C7-23
+   DHCP Enabled. . . . . . . . . . . : Yes
+   Autoconfiguration Enabled . . . . : Yes
+   IPv6 Address. . . . . . . . . . . : 2402:4000:13c0:a2ec:62e:e1f1:6da7:2a31(Preferred) 
+   Temporary IPv6 Address. . . . . . : 2402:4000:13c0:a2ec:b182:afd5:e597:ff75(Preferred) 
+   Link-local IPv6 Address . . . . . : fe80::118a:1705:53df:ba05%2(Preferred) 
+   IPv4 Address. . . . . . . . . . . : 10.75.45.92(Preferred) 
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Lease Obtained. . . . . . . . . . : Saturday, January 10, 2026 10:10:19 AM
+   Lease Expires . . . . . . . . . . : Saturday, January 10, 2026 11:10:17 AM
+   Default Gateway . . . . . . . . . : fe80::9c4b:7aff:fe14:b8c0%2
+                                       10.75.45.159
+   DHCP Server . . . . . . . . . . . : 10.75.45.159
+   DHCPv6 IAID . . . . . . . . . . . : 36735306
+   DHCPv6 Client DUID. . . . . . . . : 00-01-01-00-30-E6-53-A2-30-89-4A-D4-BE-E4
+   DNS Servers . . . . . . . . . . . : 10.75.45.159
+                                       2402:4000:13c0:a2ec::c7
+   NetBIOS over Tcpip. . . . . . . . : Enabled
+
+Ethernet adapter Bluetooth Network Connection:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+   Description . . . . . . . . . . . : Bluetooth Device (Personal Area Network)
+   Physical Address. . . . . . . . . : 30-89-4A-D4-BE-E8
+   DHCP Enabled. . . . . . . . . . . : Yes
+   Autoconfiguration Enabled . . . . : Yes

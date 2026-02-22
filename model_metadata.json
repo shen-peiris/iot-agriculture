@@ -1,0 +1,57 @@
+{
+  "version": "3.0",
+  "created_at": "2026-01-29T12:26:45.388277",
+  "n_samples": 10000,
+  "n_estimators": 100,
+  "features": [
+    "soil1",
+    "soil2",
+    "soil3",
+    "temp",
+    "humidity",
+    "rain",
+    "pressure"
+  ],
+  "targets": [
+    "p1",
+    "p2",
+    "p3"
+  ],
+  "accuracy": {
+    "exact_match": 95.95,
+    "pump1": 98.55,
+    "pump2": 98.35,
+    "pump3": 98.65
+  },
+  "feature_importance": {
+    "soil1": 0.4041,
+    "soil2": 0.1096,
+    "soil3": 0.0956,
+    "temp": 0.078,
+    "humidity": 0.0693,
+    "rain": 0.1928,
+    "pressure": 0.0506
+  },
+  "thresholds": {
+    "CRITICAL_DRY": 20,
+    "DRY_THRESHOLD": 30,
+    "OPTIMAL_LOW": 40,
+    "OPTIMAL_HIGH": 70,
+    "SATURATED": 85,
+    "FROST_RISK": 5,
+    "COLD": 15,
+    "OPTIMAL_TEMP_LOW": 20,
+    "OPTIMAL_TEMP_HIGH": 30,
+    "HEAT_STRESS": 35,
+    "EXTREME_HEAT": 40,
+    "STORM_IMMINENT": 1000,
+    "LOW_PRESSURE": 1005,
+    "NORMAL_PRESSURE": 1013,
+    "HIGH_PRESSURE": 1020,
+    "VERY_DRY_AIR": 30,
+    "DRY_AIR": 40,
+    "COMFORTABLE": 60,
+    "HUMID": 80,
+    "VERY_HUMID": 90
+  }
+}
