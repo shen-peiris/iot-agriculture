@@ -39,30 +39,29 @@ Based on agronomic rules mimicking real-world constraints:
 
 ---
 
-## 🔌 ESP32 Hardware & Pin Assignments
+## 🌡️ Sensors & Hardware Used
+This project uses a multitude of sensors to capture complete environmental states.
+
+| Sensor Name | Purpose | Interface / Pin |
+| :--- | :--- | :--- |
+| **BME280** | High-precision ambient Temperature, Humidity, and Pressure | I2C (0x76/0x77) |
+| **DHT11** | Backup Temperature & Humidity sensor if BME280 fails | Digital `GPIO 4` |
+| **PIR Sensor** | Perimeter security & motion detection | Digital `GPIO 25` |
+| **Rain Sensor Module** | Immediate precipitation detection to halt irrigation | Digital `GPIO 27` |
+| **HC-SR04** (Ultrasonic) | Measure water level distance in the main tank | `TRIG: 18`, `ECHO: 19` |
+| **LDR (Photoresistor)** | Ambient light detection to trigger night illumination | Analog `GPIO 34` |
+| **3x Analog Soil Moisture**| Measure moisture levels independently across 3 zones | via **ADS1115** |
+| **1x Analog Water Level** | Detect exact submersion levels for the Paddy Field | via **ADS1115** |
+| **ADS1115** | 16-bit ADC expansion for analog sensors | I2C (0x48) |
+| **MCP23017** | 16-channel I/O expansion for Relay switching | I2C (0x20) |
+
+---
+
+## 🔌 ESP32 Pin Assignments
 
 The system uses standard ESP32 DevKit wiring alongside I2C expansions.
 
 ### I2C Bus Devices (SDA = GPIO 21, SCL = GPIO 22)
-* **ADS1115 (Address `0x48`)**: 16-bit ADC for high-precision analog readings.
-* **MCP23017 (Address `0x20`)**: 16-channel I2C I/O Expander for managing the heavy 4-channel relay load.
-* **BME280 (Address `0x76/0x77`)**: Precision environmental sensor (Temperature, Humidity, Barometric Pressure).
-
-### Directly Connected Sensors (ESP32 GPIO)
-| Component | Pin | Type | Note |
-| :--- | :--- | :--- | :--- |
-| **White Lamp 1** | `GPIO 12` | Digital Out | Night illumination, controlled by LDR |
-| **White Lamp 2** | `GPIO 13` | Digital Out | Night illumination, controlled by LDR |
-| **White Lamp 3** | `GPIO 14` | Digital Out | Night illumination, controlled by LDR |
-| **White Lamp 4** | `GPIO 32` | Digital Out | Night illumination, controlled by LDR |
-| **Red Alert LED** | `GPIO 26` | Digital Out | Triggers upon PIR security motion |
-| **Buzzer** | `GPIO 33` | Digital Out | Lockdown / Alarm |
-| **Rain Sensor** | `GPIO 27` | Digital In | Active LOW |
-| **LDR (Light)** | `GPIO 34` | Analog In | Day/Night detection |
-| **PIR Motion** | `GPIO 25` | Digital In | Perimeter security |
-| **Ultrasonic TRIG** | `GPIO 18` | Digital Out | Tank water level |
-| **Ultrasonic ECHO** | `GPIO 19` | Digital In | Tank water level |
-| **DHT11 (Backup)**| `GPIO 4`  | Digital In | Backup if BME280 fails |
 
 ### ADS1115 Analog Multiplexer Channels
 Because the ESP32 has limited ADC pins, critical analog sensors are routed through the ADS1115:
@@ -78,26 +77,59 @@ Used to safely isolate and trigger high-power 5V/12V pumps:
 * `GPA2`: Relay 3 -> Pump 3 (Paddy Field)
 * `GPA3`: Relay 4 -> Tank Refill Pump
 
-### How to Change Pin Assignments 🛠
-If you are building your own iteration and need to alter pins:
-1. Open `sketch_jan8a/sketch_jan8a.ino`.
-2. Locate the **ESP32 DIRECT PIN DEFINITIONS** section around line 70.
-3. Modify the `#define` macros (e.g., `#define PIN_LED1 12` -> `#define PIN_LED1 15`).
-4. Re-compile and flash the firmware using the Arduino IDE.
-*(Note: Always respect standard ESP32 strapping pins restrictions when rewiring!)*
+### Outputs (ESP32 Direct)
+* **White Lamps 1-3:** `GPIO 12`, `GPIO 13`, `GPIO 14` (LDR Controlled)
+* **White Lamp 4:** `GPIO 32` (LDR Controlled)
+* **Red Alert LED:** `GPIO 26` (PIR Controlled)
+* **Buzzer/Alarm:** `GPIO 33`
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started & Configuration
 
-### 1. Hardware Setup
-* Flash `sketch_jan8a.ino` onto your ESP32.
-* Ensure your WiFi credentials and the Server IP (`http://<SERVER_IP>:8080/api/update_sensors`) are updated in the sketch.
+### 1. Hardware Configuration (ESP32)
+Before flashing the code to your ESP32, you must modify the WiFi and Server details to match your network.
+Open `sketch_jan8a/sketch_jan8a.ino` and locate lines 61-68:
+```cpp
+// WiFi Credentials (UPDATE THESE)
+const char* ssid = "YOUR_WIFI_SSID_HERE";
+const char* password = "YOUR_WIFI_PASSWORD_HERE";
 
-### 2. Server Setup
+// Server Configuration
+// Change this to the local IPv4 address of the computer running server.py
+const char* serverUrl = "http://YOUR_SERVER_IP:8080/api/update_sensors";
+```
+Compile and flash the firmware to your ESP32.
+
+### 2. Server Setup & Dependencies
 * Install Python 3.8+
-* Install dependencies: `pip install -r requirements.txt` (requires `flask`, `pandas`, `numpy`, `scikit-learn`).
-* Run the main server: `python server.py`
-* The dashboard will be available locally on port `8080`. 
+* Install required dependencies by running:
+  ```bash
+  pip install -r requirements.txt
+  ```
+  *(Dependencies: `flask`, `pandas`, `numpy`, `scikit-learn`)*
+* Start the backend server:
+  ```bash
+  python server.py
+  ```
+
+### 3. Web Dashboard Login & Usage
+Once the server is running, navigate to `http://localhost:8080` (or your chosen IP) in your browser.
+
+**Default Administrator Credentials**:
+* **Operator ID**: `admin`
+* **Security Key**: `admin123`
+
+#### Changing Default Credentials:
+For security in production deployments, update these default credentials:
+1. Open `script.js` in a code editor.
+2. Locate the `AUTH` constant around line 283:
+```javascript
+const AUTH = {
+    user: 'admin', // DEFAULT - CHANGE BEFORE PRODUCTION
+    pass: 'admin123' // DEFAULT - CHANGE BEFORE PRODUCTION
+};
+```
+3. Change these to your highly secure login details.
 
 *(Tip: In development, there is a built-in Simulation Mode you can trigger from the Dashboard Settings to test the UI without having the physical ESP32 connected!)*
