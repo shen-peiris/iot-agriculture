@@ -61,11 +61,11 @@
 // ============================================================
 
 // WiFi Credentials (UPDATE THESE)
-const char* ssid = "Galaxy A21sB582";
-const char* password = "12345678";
+const char* ssid = "YOUR_WIFI_SSID_HERE";
+const char* password = "YOUR_WIFI_PASSWORD_HERE";
 
 // Server Configuration
-const char* serverUrl = "http://10.138.147.92:8080/api/update_sensors";
+const char* serverUrl = "http://YOUR_SERVER_IP:8080/api/update_sensors";
 
 // ============================================================
 // ESP32 DIRECT PIN DEFINITIONS

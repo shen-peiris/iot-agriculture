@@ -281,8 +281,8 @@ loginSuccess = function () {
 };
 
 const AUTH = {
-    user: 'admin',
-    pass: 'admin123'
+    user: 'admin', // DEFAULT - CHANGE BEFORE PRODUCTION
+    pass: 'admin123' // DEFAULT - CHANGE BEFORE PRODUCTION
 };
 
 function handleLogin(e) {
